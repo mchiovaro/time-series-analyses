@@ -1,0 +1,10 @@
+.DS_Store
+data/
+results/
+*.html
+.Rhistory
+.Rapp.history
+*_cache/
+*.fff
+*.log
+*.ttt
