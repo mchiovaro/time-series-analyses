@@ -9,19 +9,12 @@
 # Last updated: 2020_01_21
 
 #### 1. Set up ####
-# install.packages("vars", "tseries", "tidyverse", "stargazer")
-# install.packages('vars',repos='http://cran.us.r-project.org')
-# install.packages('stargazer',repos='http://cran.us.r-project.org')
-# install.packages('tseries',repos='http://cran.us.r-project.org')
-# install.packages('tidyverse',repos='http://cran.us.r-project.org')
 
 # load packages
 library(vars)
 library(tseries)
 library(tidyverse)
 library(stargazer)
-
-# setwd("./Documents/_github/time-series-analyses/")
 
 # read in data
 data <- read.csv("./data/formatted/formatted_data.csv")
@@ -35,8 +28,7 @@ all_t <- ts(data$all_deciles_target)
 pos_t <- ts(data$pos_deciles_target)
 neg_t <- ts(data$neg_deciles_target)
 
-#### 2. Test for stationarity ####
-# ADF tests for stationarity
+#### 2. ADF test for stationarity ####
 (adf_coh <- adf.test(coh)) # non-stationary
 (adf_all_st <- adf.test(all_st)) # non-stationary
 (adf_pos_st <- adf.test(pos_st)) # non-stationary
@@ -57,13 +49,13 @@ pos_t <- diff(pos_t, differences=1)
 neg_t <- diff(neg_t, differences=1)
 
 # retest for stationarity
-(adf_coh <- adf.test(coh)) # non-stationary
-(adf_all_st <- adf.test(all_st)) # non-stationary
-(adf_pos_st <- adf.test(pos_st)) # non-stationary
-(adf_neg_st <- adf.test(neg_st)) # non-stationary
-(adf_all_t <- adf.test(all_t)) # non-stationary
-(adf_pos_t <- adf.test(pos_t)) # non-stationary
-(adf_neg_t <- adf.test(neg_t)) # non-stationary
+(adf_coh <- adf.test(coh)) 
+(adf_all_st <- adf.test(all_st)) 
+(adf_pos_st <- adf.test(pos_st)) 
+(adf_neg_st <- adf.test(neg_st)) 
+(adf_all_t <- adf.test(all_t)) 
+(adf_pos_t <- adf.test(pos_t)) 
+(adf_neg_t <- adf.test(neg_t)) 
 
 # create pairs
 data_all_st <- cbind(coh, all_st)
@@ -72,10 +64,6 @@ data_neg_st <- cbind(coh, neg_st)
 data_all_t <- cbind(coh, all_t)
 data_pos_t <- cbind(coh, pos_t)
 data_neg_t <- cbind(coh, neg_t)
-
-# # trim first row from non-differenced pairs due to NAs from differencing
-# data_neg_st <- ts(data_neg_st[-1,])
-# data_neg_t <- ts(data_neg_t[-1,])
 
 #### 4. Determine optimal lag ####
 (lag <- VARselect(data_all_st)) # AIC 6, SC 2
@@ -201,7 +189,7 @@ granger_t[2,12] <- granger_neg_t[["Granger"]][["parameter"]][["df1"]]
 granger_t[3,12] <- granger_neg_t[["Granger"]][["parameter"]][["df2"]]
 granger_t[4,12] <- granger_neg_t[["Granger"]][["p.value"]]
 
-#### 5. Run VAR, check stability, and Granger causality for source-target pairs ####
+#### 6. Run VAR, check stability, and Granger causality for source-target pairs ####
 
 ### Run VAR
 
