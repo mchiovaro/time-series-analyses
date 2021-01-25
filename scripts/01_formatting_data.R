@@ -33,15 +33,16 @@ cohesion_df <- cohesion_df_original %>% ungroup() %>%
   mutate(full_date <- paste(Start.Year, 
                        Start.Month, 
                        Start.Day, 
-                       sep="-") 
-         %>% ymd() 
-         %>% as.Date()) %>%
+                       sep="-") %>% 
+           ymd() %>% 
+           as.Date()) %>%
   
   rename(Date=19) %>%
   
   group_by(Date) %>%
   
-  summarise(n = n(),
+  summarise(.groups = "keep",
+            n = n(),
             MeanCohesion = mean(Cohesion..avg., na.rm=T))
 
 ### filter for source and target ###
