@@ -19,6 +19,9 @@ cohesion_df_original <- read.csv("./data/raw/syria_coherence_sort_5.csv")
 ICEWS_df <- read.delim("./data/raw/events.2012.20150313084811.tab", 
                        header = TRUE, sep = "\t", quote = "")
 
+# specify necessary libraries
+library(dplyr)
+
 #### 2. Filter and format the time series ####
 
 ### prep cohesion data ###
