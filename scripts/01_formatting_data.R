@@ -21,6 +21,7 @@ ICEWS_df <- read.delim("./data/raw/events.2012.20150313084811.tab",
 
 # specify necessary libraries
 library(dplyr)
+library(lubridate)
 
 #### 2. Filter and format the time series ####
 
