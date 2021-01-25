@@ -26,7 +26,7 @@ library(lubridate)
 #### 2. Filter and format the time series ####
 
 ### prep cohesion data ###
-cohesion_df <- cohesion_df_original %>%
+cohesion_df <- cohesion_df_original %>% ungroup() %>%
   
   mutate(Start.Year = 2012) %>%
   
@@ -47,7 +47,7 @@ cohesion_df <- cohesion_df_original %>%
 ### filter for source and target ###
 
 # filter full 2012 ICEWS data for correct dates and parameters
-ICEWS_filtered <- ICEWS_df %>% 
+ICEWS_filtered <- ICEWS_df %>% ungroup() %>%
   
   # fill blanks with NAs
   na_if("") %>%
@@ -91,7 +91,7 @@ source_targ_negatives_perc <- sum(ICEWS_filtered$Intensity < 0)/nrow(ICEWS_filte
 ### prep the event count time series ###
 
 # create new dataframe with counts of different events
-ICEWS_formatted_source_target <- ICEWS_filtered %>% 
+ICEWS_formatted_source_target <- ICEWS_filtered %>% ungroup() %>%
   
   # group by date
   group_by(Event.Date) %>%
