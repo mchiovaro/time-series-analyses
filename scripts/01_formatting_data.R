@@ -128,7 +128,7 @@ ICEWS_formatted_source_target <- ICEWS_filtered %>% ungroup() %>%
 ### filter again with just target and prep count variables ###
 
 # grab observations where target is Syria
-ICEWS_formatted_target <- ICEWS_filtered %>% 
+ICEWS_formatted_target <- ICEWS_filtered %>% ungroup() %>%
   
   # filter to just target (removing source)
   filter(grepl("Syria", Target.Country)) 
@@ -140,7 +140,7 @@ targ_negatives <- sum(ICEWS_formatted_target$Intensity < 0)
 targ_negatives_perc <- sum(ICEWS_formatted_target$Intensity < 0)/nrow(ICEWS_formatted_target)
 
 # grab observations where target is Syria
-ICEWS_formatted_target <- ICEWS_formatted_target %>%
+ICEWS_formatted_target <- ICEWS_formatted_target %>% ungroup() %>%
   
   # group by date
   group_by(Event.Date) %>%
