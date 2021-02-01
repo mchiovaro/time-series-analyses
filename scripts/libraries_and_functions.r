@@ -20,7 +20,8 @@ required_packages = c(
   'biwavelet',
   'stringr',
   'lubridate',
-  'stringi'
+  'stringi',
+  'grid'
 )
 
 # load required packages
