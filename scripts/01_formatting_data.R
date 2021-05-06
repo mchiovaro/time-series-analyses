@@ -179,10 +179,12 @@ ICEWS_formatted_target <- ICEWS_formatted_target %>% ungroup() %>%
 ICEWS_df_formatted <- dplyr::full_join(ICEWS_formatted_source_target,
                                        ICEWS_formatted_target,
                                        by=c("Date")) %>%
+  
   dplyr::full_join(., cohesion_df,
                    by=c("Date")) %>%
   
-  # remove 2020_03_30 for incomplete twitter data
+  # arrange by date and remove 2020_03_30 for incomplete twitter data
+  arrange(Date) %>%
   slice(2:n())
 
 #### 3. Create the deciles for analyses ####
