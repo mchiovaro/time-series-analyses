@@ -64,7 +64,7 @@ ICEWS_filtered <- ICEWS_df %>% ungroup() %>%
   mutate_at(vars(Event.Date), as.Date, format = "%Y-%m-%d") %>%
   
   # grab the dates that align with old data
-  filter(Event.Date >= as.Date("2012-03-30") 
+  filter(Event.Date >= as.Date("2012-03-31") 
          & Event.Date <= as.Date("2012-06-15")) %>%
   
   # change search params to characters for searching
