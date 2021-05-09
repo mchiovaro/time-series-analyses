@@ -11,6 +11,7 @@
 #### 1. Set up ####
 
 library(crqa)
+library(Rmisc)
 
 # specify global plotting variables
 all_event_color = "#CC79A7"
@@ -113,6 +114,8 @@ write.table(significance_all_target,'./results/crqa/target-metric_signif_all.csv
 
 #### 4. Diagonal recurrence profiles ###
 
+### run DRP for real data
+
 # specify window size
 win_size = 15
 
@@ -130,13 +133,59 @@ drp = drpfromts(ts1=data$coh_deciles,
                  minvertline=2,
                  tw=0)
 
-# plot DRP
-qplot(y = drp$profile, 
-      x = -win_size:win_size, 
-      geom="line") +
-  geom_line(color="red",size=1) +
+
+### run DRP for shuffled data
+
+# initialize data frame for saving metrics
+shuffled_drp_results = data.frame(matrix(, nrow=31, ncol=0))
+
+# run drp
+for(i in 1:1000){
+  
+  shuffled_drp = drpfromts(ts1=shuffled_coh[,c(i)],
+                           ts2=shuffled_all_target[,c(i)],
+                           datatype="categorical",
+                           windowsize = win_size,
+                           delay=0,
+                           embed=1,
+                           rescale=0,
+                           radius=.001,
+                           normalize=0,
+                           mindiagline=2,
+                           minvertline=2,
+                           tw=0)
+  
+  # save the crqa results
+  drp_results <- data.frame(shuffled_drp$profile)
+  
+  # bind to dataframe
+  shuffled_drp_results <- cbind(shuffled_drp_results, drp_results)
+  
+}
+
+### plot DRP
+
+# clean up the data
+drp_data <- as.data.frame(drp)
+drp_data$win_size <- -win_size:win_size
+
+# calculate mean and sd for shuffled data
+drp_data$shuffled_avg <- rowMeans(shuffled_drp_results)
+drp_data$sd <- apply(subset(shuffled_drp_results, 
+                            select = c(1:1000)), 
+                     1, sd, na.rm=TRUE) 
+                       
+# plot the drp
+ggplot(data = drp_data, aes(y = profile, 
+                         x = win_size)) +
+  geom_line(color = "red", size = 2) +
+  geom_line(aes(y = shuffled_avg, x = win_size), 
+            color = "black", size = 1) +
+  geom_errorbar(aes(ymin = shuffled_avg-sd,
+                    ymax = shuffled_avg+sd),
+                width = 0.2, color = "grey58") +
   theme_classic() +
   theme(legend.position="none") +
   ylab("% Recurrence") + xlab("Lag (in days)") +
   ggtitle("Diagonal recurrence profile")
-ggsave("./results/crqa/drp.png")
+ggsave("./results/crqa/drp.png", width = 7, height = 5)
